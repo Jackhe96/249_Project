@@ -1,0 +1,434 @@
+============================= test session starts ==============================
+platform darwin -- Python 2.7.10, pytest-4.4.1, py-1.8.0, pluggy-0.9.0
+rootdir: /Users/jack/249B_Project/pyco-dev-thesis
+plugins: timeout-1.3.3
+timeout: 1000.0s
+timeout method: signal
+timeout func_only: False
+collected 1 item
+
+pyco/tests/test_spi.py [['ready', 'adcbit_0']]
+Instantiate Solvers...
+9
+9
+*Process SinglePortSolver-1:
+Traceback (most recent call last):
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/multiprocessing/process.py", line 258, in _bootstrap
+    self.run()
+  File "/Users/jack/249B_Project/pyco-dev-thesis/pyco/z3_single_port_solver.py", line 148, in run
+    spec, contract_list, params_assign) = thread_manager.synthesize()
+  File "/Users/jack/249B_Project/pyco-dev-thesis/pyco/z3_thread_manager.py", line 135, in synthesize
+    return self.quit(wait=True)
+  File "/Users/jack/249B_Project/pyco-dev-thesis/pyco/z3_thread_manager.py", line 176, in quit
+    raise pyco.z3_interface.NotSynthesizableError()
+NotSynthesizableError
+
+F
+
+=================================== FAILURES ===================================
+__________________________________ test_adc1 ___________________________________
+
+spi_lib1 = <pyco.library.ContractLibrary object at 0x108ee9790>
+
+    def test_adc1(spi_lib1):
+        '''
+        Performs simple synthesis
+        '''
+    
+        spec1 = Spec1bit('G1')
+        # spec1 = Spec2bit('G1')
+        #spec1 = Spec3bit('G1')
+        # spec1 = Spec('G1')
+        # spec1 = SpecIncremental('G1')
+    
+        interface = SynthesisInterface(spi_lib1, [spec1])
+    
+        #adc = interface.get_component('ADC')
+        #interface.use_component(adc)
+        # interface.use_connected_spec(adc, 'anbit_0', 'anbit_0')
+    
+    
+        # interface.synthesize(max_depth=4, library_max_redundancy=1)
+>       interface.synthesize(max_depth=4, library_max_redundancy=1, decompose=False)
+
+pyco/tests/test_spi.py:856: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyco/synthesis.py:158: in synthesize
+    decompose=decompose)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pyco.z3_interface.Z3Interface object at 0x108f94890>
+specs = [<pyco.examples.example_spi.Spec1bit object at 0x108d6d990>]
+distinct_spec_port_set = set([]), limit = None, max_depth = 4
+minimize_components = False, minimize_cost = False, fixed_components = set([])
+fixed_connections = set([]), fixed_connections_spec = set([])
+balance_types = set([]), decompose = False
+
+    def synthesize(self, specs,
+                   distinct_spec_port_set=None,
+                   limit=None,
+                   max_depth=None,
+                   minimize_components=False,
+                   minimize_cost=False,
+                   fixed_components=None,
+                   fixed_connections=None,
+                   fixed_connections_spec=None,
+                   balance_types=None,
+                   decompose=True):
+        '''
+        perform synthesis process
+        '''
+        if sum([minimize_components, minimize_cost]) > 1:
+            raise OptimizationError('Only one objective can be minimized')
+        if minimize_cost:
+            raise NotImplementedError('Custom cost not yet implemented')
+    
+        #self.time = {}
+        #self.time['start'] = time()
+    
+        self.distinct_spec_port_set = {}
+        if distinct_spec_port_set is not None:
+            self.distinct_spec_port_set = distinct_spec_port_set
+    
+        self.fixed_components = fixed_components
+        self.fixed_connections = fixed_connections
+        self.fixed_connections_spec = fixed_connections_spec
+    
+        self.specification_list = specs
+    
+        optimize = minimize_components | minimize_cost
+    
+        # let's pick a root
+        # we assume all the specs have same interface
+        self.spec = self.specification_list[0]
+        spec_outs = len(self.spec.output_ports_dict)
+    
+        if limit is None:
+            self.max_components = spec_outs
+        else:
+            self.max_components = limit
+    
+        # if depth is None:
+        #     depth = min(int(3* limit/spec_outs), limit)
+        self.max_depth = max_depth
+    
+    
+        self.balance_max_types = set()
+        if balance_types is not None:
+            self.balance_max_types = balance_types
+    
+        constraints = [True]
+    
+        self.initiliaze_solver(self.spec)
+    
+    
+        # print lib structure
+        for contract in self.library.all_contracts:
+            LOG.debug('++++')
+            LOG.debug('%s' % (contract.base_name))
+    
+    
+        constraints.append(self.init_models())
+        #constraints.append(self.use_max_n_components(self.max_components))
+        #constraints.append(self.max_depth(depth))
+        constraints.append(self.type_connection_rules())
+        # constraints.append(self.type_connection_rules_and_no_loops())
+    
+        constraints.append(self.process_fixed_components())
+    
+        goal = Goal()
+        goal.add(constraints)
+        goal = goal.simplify()
+    
+        # #split here
+        if optimize:
+            solv = Optimize()
+        else:
+            solv = Solver()
+    
+        solv.add(goal.as_expr())
+    
+        self.base_solver = solv
+    
+        if decompose:
+            print('Decomposing Specification...')
+            clusters = decompose_spec(self.specification_list, self.library)
+        else:
+            clusters = [self.spec.output_ports_dict.keys()]
+    
+        print(clusters)
+    
+        if len(clusters) == 0:
+            clusters.append([])
+    
+        print('Instantiate Solvers...')
+        #create parallel solvers
+        solvers = []
+    
+        result_queue = multiprocessing.Queue()
+    
+        semaphore = multiprocessing.Semaphore(MAX_THREADS)
+    
+        results = []
+    
+        for cluster in clusters:
+        # for cluster in [['o1', 'o2', 'o3']]:
+        # for cluster in [['c2','c3','c5','c6']]:
+    
+            #solve for port
+            self.base_solver.push()
+    
+            # self.base_solver.add(self.solve_for_outputs(cluster))
+    
+            context = Context()
+            assertions = self.base_solver.assertions()
+            new_assertions = assertions.translate(context)
+    
+            #restore solver state
+            self.base_solver.pop()
+    
+            solver_p = SinglePortSolver(self, new_assertions, context,
+                                        cluster, semaphore,
+                                        self.spec,
+                                        minimize_components=minimize_components,
+                                        distinct_spec_port_set=None,
+                                        fixed_components=self.fixed_components,
+                                        fixed_connections=self.fixed_connections,
+                                        fixed_connections_spec=self.fixed_connections_spec,
+                                        result_queue=result_queue,
+                                        )
+    
+            solvers.append(solver_p)
+    
+            solver_p.start()
+            # solver_p.join()
+    
+    
+        while len(results) < len(clusters):
+            results.append(result_queue.get())
+            if results[-1] is None:
+                break
+    
+        if any([x is None for x in results]):
+>           raise NotSynthesizableError
+E           NotSynthesizableError
+
+pyco/z3_interface.py:393: NotSynthesizableError
+=========================== 1 failed in 9.96 seconds ===========================
+============================= test session starts ==============================
+platform darwin -- Python 2.7.10, pytest-4.4.1, py-1.8.0, pluggy-0.9.0
+rootdir: /Users/jack/249B_Project/pyco-dev-thesis
+plugins: timeout-1.3.3
+timeout: 1000.0s
+timeout method: signal
+timeout func_only: False
+collected 1 item
+
+pyco/tests/test_spi.py [['ready', 'adcbit_0']]
+Instantiate Solvers...
+9
+9
+*Process SinglePortSolver-1:
+Traceback (most recent call last):
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/multiprocessing/process.py", line 258, in _bootstrap
+    self.run()
+  File "/Users/jack/249B_Project/pyco-dev-thesis/pyco/z3_single_port_solver.py", line 148, in run
+    spec, contract_list, params_assign) = thread_manager.synthesize()
+  File "/Users/jack/249B_Project/pyco-dev-thesis/pyco/z3_thread_manager.py", line 135, in synthesize
+    return self.quit(wait=True)
+  File "/Users/jack/249B_Project/pyco-dev-thesis/pyco/z3_thread_manager.py", line 176, in quit
+    raise pyco.z3_interface.NotSynthesizableError()
+NotSynthesizableError
+
+F
+
+=================================== FAILURES ===================================
+__________________________________ test_adc1 ___________________________________
+
+spi_lib1 = <pyco.library.ContractLibrary object at 0x1040ae950>
+
+    def test_adc1(spi_lib1):
+        '''
+        Performs simple synthesis
+        '''
+    
+        spec1 = Spec1bit('G1')
+        # spec1 = Spec2bit('G1')
+        #spec1 = Spec3bit('G1')
+        # spec1 = Spec('G1')
+        # spec1 = SpecIncremental('G1')
+    
+        interface = SynthesisInterface(spi_lib1, [spec1])
+    
+        #adc = interface.get_component('ADC')
+        #interface.use_component(adc)
+        # interface.use_connected_spec(adc, 'anbit_0', 'anbit_0')
+    
+    
+        # interface.synthesize(max_depth=4, library_max_redundancy=1)
+>       interface.synthesize(max_depth=4, library_max_redundancy=1, decompose=False)
+
+pyco/tests/test_spi.py:856: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyco/synthesis.py:158: in synthesize
+    decompose=decompose)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pyco.z3_interface.Z3Interface object at 0x104140450>
+specs = [<pyco.examples.example_spi.Spec1bit object at 0x103f41890>]
+distinct_spec_port_set = set([]), limit = None, max_depth = 4
+minimize_components = False, minimize_cost = False, fixed_components = set([])
+fixed_connections = set([]), fixed_connections_spec = set([])
+balance_types = set([]), decompose = False
+
+    def synthesize(self, specs,
+                   distinct_spec_port_set=None,
+                   limit=None,
+                   max_depth=None,
+                   minimize_components=False,
+                   minimize_cost=False,
+                   fixed_components=None,
+                   fixed_connections=None,
+                   fixed_connections_spec=None,
+                   balance_types=None,
+                   decompose=True):
+        '''
+        perform synthesis process
+        '''
+        if sum([minimize_components, minimize_cost]) > 1:
+            raise OptimizationError('Only one objective can be minimized')
+        if minimize_cost:
+            raise NotImplementedError('Custom cost not yet implemented')
+    
+        #self.time = {}
+        #self.time['start'] = time()
+    
+        self.distinct_spec_port_set = {}
+        if distinct_spec_port_set is not None:
+            self.distinct_spec_port_set = distinct_spec_port_set
+    
+        self.fixed_components = fixed_components
+        self.fixed_connections = fixed_connections
+        self.fixed_connections_spec = fixed_connections_spec
+    
+        self.specification_list = specs
+    
+        optimize = minimize_components | minimize_cost
+    
+        # let's pick a root
+        # we assume all the specs have same interface
+        self.spec = self.specification_list[0]
+        spec_outs = len(self.spec.output_ports_dict)
+    
+        if limit is None:
+            self.max_components = spec_outs
+        else:
+            self.max_components = limit
+    
+        # if depth is None:
+        #     depth = min(int(3* limit/spec_outs), limit)
+        self.max_depth = max_depth
+    
+    
+        self.balance_max_types = set()
+        if balance_types is not None:
+            self.balance_max_types = balance_types
+    
+        constraints = [True]
+    
+        self.initiliaze_solver(self.spec)
+    
+    
+        # print lib structure
+        for contract in self.library.all_contracts:
+            LOG.debug('++++')
+            LOG.debug('%s' % (contract.base_name))
+    
+    
+        constraints.append(self.init_models())
+        #constraints.append(self.use_max_n_components(self.max_components))
+        #constraints.append(self.max_depth(depth))
+        constraints.append(self.type_connection_rules())
+        # constraints.append(self.type_connection_rules_and_no_loops())
+    
+        constraints.append(self.process_fixed_components())
+    
+        goal = Goal()
+        goal.add(constraints)
+        goal = goal.simplify()
+    
+        # #split here
+        if optimize:
+            solv = Optimize()
+        else:
+            solv = Solver()
+    
+        solv.add(goal.as_expr())
+    
+        self.base_solver = solv
+    
+        if decompose:
+            print('Decomposing Specification...')
+            clusters = decompose_spec(self.specification_list, self.library)
+        else:
+            clusters = [self.spec.output_ports_dict.keys()]
+    
+        print(clusters)
+    
+        if len(clusters) == 0:
+            clusters.append([])
+    
+        print('Instantiate Solvers...')
+        #create parallel solvers
+        solvers = []
+    
+        result_queue = multiprocessing.Queue()
+    
+        semaphore = multiprocessing.Semaphore(MAX_THREADS)
+    
+        results = []
+    
+        for cluster in clusters:
+        # for cluster in [['o1', 'o2', 'o3']]:
+        # for cluster in [['c2','c3','c5','c6']]:
+    
+            #solve for port
+            self.base_solver.push()
+    
+            # self.base_solver.add(self.solve_for_outputs(cluster))
+    
+            context = Context()
+            assertions = self.base_solver.assertions()
+            new_assertions = assertions.translate(context)
+    
+            #restore solver state
+            self.base_solver.pop()
+    
+            solver_p = SinglePortSolver(self, new_assertions, context,
+                                        cluster, semaphore,
+                                        self.spec,
+                                        minimize_components=minimize_components,
+                                        distinct_spec_port_set=None,
+                                        fixed_components=self.fixed_components,
+                                        fixed_connections=self.fixed_connections,
+                                        fixed_connections_spec=self.fixed_connections_spec,
+                                        result_queue=result_queue,
+                                        )
+    
+            solvers.append(solver_p)
+    
+            solver_p.start()
+            # solver_p.join()
+    
+    
+        while len(results) < len(clusters):
+            results.append(result_queue.get())
+            if results[-1] is None:
+                break
+    
+        if any([x is None for x in results]):
+>           raise NotSynthesizableError
+E           NotSynthesizableError
+
+pyco/z3_interface.py:393: NotSynthesizableError
+========================== 1 failed in 10.02 seconds ===========================

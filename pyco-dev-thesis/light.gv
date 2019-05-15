@@ -1,0 +1,11 @@
+digraph pyco_out {
+	node [shape=Mrecord]
+	compound=true label="" labeljust=center labelloc=b rankdir=LR splines=polyline
+	G1_in [label="Spec \nInputs|<press> press" rank=source shape=record]
+	"4585788432.4585790992.BaseLED_2" [label="{{<on> on}|BaseLED|{<light> light}}"]
+	"4585788432.4585790992.BaseBut_2" [label="{{<press> press}|BaseBut|{<on> on}}"]
+	G1_out [label="Spec \nOutputs|<light> light" rank=sink shape=record]
+	"4585788432.4585790992.BaseLED_2":light -> G1_out:light [label=light_0_0_0]
+	G1_in:press -> "4585788432.4585790992.BaseBut_2":press [label=press_0_0_0]
+	"4585788432.4585790992.BaseBut_2":on -> "4585788432.4585790992.BaseLED_2":on [label=on_0_0_0]
+}

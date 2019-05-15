@@ -1,0 +1,6 @@
+*.pyc
+*.out
+*.swp
+*.ltl
+tags
+.DS_Store

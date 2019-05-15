@@ -1,0 +1,49 @@
+============================= test session starts ==============================
+platform darwin -- Python 2.7.10, pytest-4.4.1, py-1.8.0, pluggy-0.9.0
+rootdir: /Users/jack/249B_Project/pyco-dev-thesis
+plugins: timeout-1.3.3
+timeout: 1000.0s
+timeout method: signal
+timeout func_only: False
+collected 1 item
+
+pyco/tests/test_spi.py Spec before transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		req_6 ( req ) : BOOL
+		analog_6 ( analog ) : INT
+	Output ports:
+		ready_0 ( ready ) : BOOL
+		adcbit_0_0 ( adcbit_0 ) : BOOL
+		adcbit_1_0 ( adcbit_1 ) : BOOL
+	Assumption
+		G (analog_6 >= 0) & G (analog_6 < 4) & ! req_6 & G (req_6 -> X ! req_6 & X2 ! req_6 & X3 ! req_6 & X4 ! req_6)
+	Guarantee
+		! (G (analog_6 >= 0) & G (analog_6 < 4) & ! req_6 & G (req_6 -> X ! req_6 & X2 ! req_6 & X3 ! req_6 & X4 ! req_6)) | G (req_6 -> X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ready_0 | X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ! ready_0 & X5 ready_0 | X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ! ready_0 & X5 ! ready_0 & X6 ready_0 | X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ! ready_0 & X5 ! ready_0 & ! X6 ready_0 & X7 ready_0 | X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ! ready_0 & X5 ! ready_0 & ! X6 ready_0 & X7 ! ready_0 & X8 ready_0 | X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ! ready_0 & X5 ! ready_0 & ! X6 ready_0 & X7 ! ready_0 & X8 ! ready_0 & X9 ready_0 | X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ! ready_0 & X5 ! ready_0 & ! X6 ready_0 & X7 ! ready_0 & X8 ! ready_0 & X9 ! ready_0 & X10 ready_0) & G (req_6 -> (X4 adcbit_0_0 <-> X2 (analog_6 / 1 - 2 * (analog_6 / 2) = 1)) & (X4 adcbit_1_0 <-> X2 (analog_6 / 2 - 2 * (analog_6 / 4) = 1)))
+
+Spec after transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		req_6 ( req ) : BOOL
+		analog_6 ( analog ) : INT
+	Output ports:
+		ready_0 ( ready ) : BOOL
+		adcbit_0_0 ( adcbit_0 ) : BOOL
+		adcbit_1_0 ( adcbit_1 ) : BOOL
+	Assumption
+		G (analog_6 >= 0) & G (analog_6 < 4) & ! req_6 & G (req_6 -> X ! req_6 & X2 ! req_6 & X3 ! req_6 & X4 ! req_6)
+	Guarantee
+		! (G (analog_6 >= 0) & G (analog_6 < 4) & ! req_6 & G (req_6 -> X ! req_6 & X2 ! req_6 & X3 ! req_6 & X4 ! req_6)) | G (req_6 -> X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ready_0 | X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ! ready_0 & X5 ready_0 | X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ! ready_0 & X5 ! ready_0 & X6 ready_0 | X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ! ready_0 & X5 ! ready_0 & ! X6 ready_0 & X7 ready_0 | X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ! ready_0 & X5 ! ready_0 & ! X6 ready_0 & X7 ! ready_0 & X8 ready_0 | X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ! ready_0 & X5 ! ready_0 & ! X6 ready_0 & X7 ! ready_0 & X8 ! ready_0 & X9 ready_0 | X ! ready_0 & X2 ! ready_0 & X3 ! ready_0 & X4 ! ready_0 & X5 ! ready_0 & ! X6 ready_0 & X7 ! ready_0 & X8 ! ready_0 & X9 ! ready_0 & X10 ready_0) & G (req_6 -> (X4 adcbit_0_0 <-> X2 (analog_6 / 1 - 2 * (analog_6 / 2) = 1)) & (X4 adcbit_1_0 <-> X2 (analog_6 / 2 - 2 * (analog_6 / 4) = 1)))
+
+[['ready', 'adcbit_0', 'adcbit_1']]
+Instantiate Solvers...
+11
+11
+* 
+loops until success:
+5
+
+Solution synthesised in 27.5734210014
+.
+
+========================== 1 passed in 28.25 seconds ===========================

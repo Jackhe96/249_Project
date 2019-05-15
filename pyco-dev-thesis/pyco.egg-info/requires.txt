@@ -1,0 +1,13 @@
+ply
+py
+pytest
+pycolite
+pytest-timeout
+graphviz
+z3-solver
+
+[dev]
+check-manifest
+
+[test]
+pytest

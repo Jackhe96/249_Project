@@ -1,0 +1,300 @@
+============================= test session starts ==============================
+platform darwin -- Python 2.7.10, pytest-4.4.1, py-1.8.0, pluggy-0.9.0
+rootdir: /Users/jack/249B_Project/pyco-dev-thesis
+plugins: timeout-1.3.3
+timeout: 1000.0s
+timeout method: signal
+timeout func_only: False
+
+========================= no tests ran in 0.27 seconds =========================
+ERROR: not found: /Users/jack/249B_Project/pyco-dev-thesis/pyco/tests/test_button_led.py::test_synth_2led_1v_1c
+(no name '/Users/jack/249B_Project/pyco-dev-thesis/pyco/tests/test_button_led.py::test_synth_2led_1v_1c' in any of [<Module test_button_led.py>])
+
+============================= test session starts ==============================
+platform darwin -- Python 2.7.10, pytest-4.4.1, py-1.8.0, pluggy-0.9.0
+rootdir: /Users/jack/249B_Project/pyco-dev-thesis
+plugins: timeout-1.3.3
+timeout: 1000.0s
+timeout method: signal
+timeout func_only: False
+collected 1 item
+
+pyco/tests/test_button_led.py Spec before transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> F light_5)
+
+orthogonalizing
+Spec after transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> X light_5)
+
+[['light']]
+Instantiate Solvers...
+9
+9
+============================= test session starts ==============================
+platform darwin -- Python 2.7.10, pytest-4.4.1, py-1.8.0, pluggy-0.9.0
+rootdir: /Users/jack/249B_Project/pyco-dev-thesis
+plugins: timeout-1.3.3
+timeout: 1000.0s
+timeout method: signal
+timeout func_only: False
+collected 1 item
+
+pyco/tests/test_button_led.py Spec before transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> F light_5)
+
+orthogonalizing
+Spec after transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> X light_5)
+
+[['light']]
+Instantiate Solvers...
+9
+9
+============================= test session starts ==============================
+platform darwin -- Python 2.7.10, pytest-4.4.1, py-1.8.0, pluggy-0.9.0
+rootdir: /Users/jack/249B_Project/pyco-dev-thesis
+plugins: timeout-1.3.3
+timeout: 1000.0s
+timeout method: signal
+timeout func_only: False
+collected 1 item
+
+pyco/tests/test_button_led.py Spec before transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> F light_5)
+
+orthogonalizing
+Spec after transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> X light_5)
+
+[['light']]
+Instantiate Solvers...
+9
+9
+============================= test session starts ==============================
+platform darwin -- Python 2.7.10, pytest-4.4.1, py-1.8.0, pluggy-0.9.0
+rootdir: /Users/jack/249B_Project/pyco-dev-thesis
+plugins: timeout-1.3.3
+timeout: 1000.0s
+timeout method: signal
+timeout func_only: False
+collected 1 item
+
+pyco/tests/test_button_led.py Spec before transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> F light_5)
+
+orthogonalizing
+Spec after transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> X light_5)
+
+[['light']]
+Instantiate Solvers...
+9
+9
+============================= test session starts ==============================
+platform darwin -- Python 2.7.10, pytest-4.4.1, py-1.8.0, pluggy-0.9.0
+rootdir: /Users/jack/249B_Project/pyco-dev-thesis
+plugins: timeout-1.3.3
+timeout: 1000.0s
+timeout method: signal
+timeout func_only: False
+collected 1 item
+
+pyco/tests/test_button_led.py Spec before transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> F light_5)
+
+orthogonalizing
+Spec after transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> X light_5)
+
+[['light']]
+Instantiate Solvers...
+9
+9
+============================= test session starts ==============================
+platform darwin -- Python 2.7.10, pytest-4.4.1, py-1.8.0, pluggy-0.9.0
+rootdir: /Users/jack/249B_Project/pyco-dev-thesis
+plugins: timeout-1.3.3
+timeout: 1000.0s
+timeout method: signal
+timeout func_only: False
+collected 1 item
+
+pyco/tests/test_button_led.py Spec before transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> F light_5)
+
+orthogonalizing
+Spec after transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> X light_5)
+
+[['light']]
+Instantiate Solvers...
+9
+9
+============================= test session starts ==============================
+platform darwin -- Python 2.7.10, pytest-4.4.1, py-1.8.0, pluggy-0.9.0
+rootdir: /Users/jack/249B_Project/pyco-dev-thesis
+plugins: timeout-1.3.3
+timeout: 1000.0s
+timeout method: signal
+timeout func_only: False
+collected 1 item
+
+pyco/tests/test_button_led.py Spec before transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> F light_5)
+
+orthogonalizing
+Spec after transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> X light_5)
+
+[['light']]
+Instantiate Solvers...
+9
+9
+============================= test session starts ==============================
+platform darwin -- Python 2.7.10, pytest-4.4.1, py-1.8.0, pluggy-0.9.0
+rootdir: /Users/jack/249B_Project/pyco-dev-thesis
+plugins: timeout-1.3.3
+timeout: 1000.0s
+timeout method: signal
+timeout func_only: False
+collected 1 item
+
+pyco/tests/test_button_led.py Spec before transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> F light_5)
+
+orthogonalizing
+Spec after transformation: 
+Contract G1_0 ( G1 )
+	Input ports:
+		press_6 ( press ) : BOOL
+	Output ports:
+		light_5 ( light ) : BOOL
+	Assumption
+		true
+	Guarantee
+		! true | G (press_6 -> X light_5)
+
+[['light']]
+Instantiate Solvers...
+9
+9

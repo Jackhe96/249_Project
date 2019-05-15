@@ -1,0 +1,7 @@
+include DESCRIPTION.md
+include setup.cfg
+
+include resources/README
+include resources/temp/README
+include resources/ltl3ba/LICENSE
+include resources/ltl3ba/README

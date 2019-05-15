@@ -1,0 +1,23 @@
+digraph pyco_out {
+	node [shape=Mrecord]
+	compound=true label="" labeljust=center labelloc=b rankdir=LR splines=polyline
+	G1_in [label="Spec \nInputs|<req> req|<analog> analog" rank=source shape=record]
+	"4462011408.4463516944.ff_3" [label="{{<en> en|<d> d}|ff|{<q> q}}"]
+	"4462011408.4463516944.invert_3" [label="{{<in> in}|invert|{<out> out}}"]
+	"4462011408.4463516944.Comparator_3" [label="{{<val_in> val_in}|Comparator|{<is_eq> is_eq|<n> n = 2}}"]
+	"4462011408.4463516944.ADC2int_3" [label="{{<cs> cs|<analog> analog}|ADC2int|{<miso> miso}}"]
+	"4462011408.4463516944.Counter_4" [label="{{<reset> reset}|Counter|{<value> value|<n> n = 4}}"]
+	"4462011408.4463516944.Trigger_4" [label="{{<reset> reset}|Trigger|{<trig> trig|<c> c|<n> n = 1}}"]
+	G1_out [label="Spec \nOutputs|<ready> ready|<adcbit_0> adcbit_0|<adcbit_1> adcbit_1" rank=sink shape=record]
+	"4462011408.4463516944.Trigger_4":trig -> "4462011408.4463516944.ADC2int_3":cs [label=trig_0_0_1]
+	"4462011408.4463516944.invert_3":out -> G1_out:ready [label=out_0_0_0]
+	"4462011408.4463516944.ADC2int_3":miso -> "4462011408.4463516944.ff_3":d [label=miso_0_0_0]
+	"4462011408.4463516944.ADC2int_3":miso -> G1_out:adcbit_1 [label=miso_0_0_0]
+	"4462011408.4463516944.Comparator_3":is_eq -> "4462011408.4463516944.ff_3":en [label=en_0_0_0]
+	"4462011408.4463516944.ff_3":q -> G1_out:adcbit_0 [label=q_0_0_0]
+	"4462011408.4463516944.Counter_4":value -> "4462011408.4463516944.Comparator_3":val_in [label=value_0_0_7]
+	G1_in:req -> "4462011408.4463516944.Counter_4":reset [label=reset_3_0_3]
+	G1_in:req -> "4462011408.4463516944.Trigger_4":reset [label=reset_3_0_3]
+	G1_in:req -> "4462011408.4463516944.invert_3":in [label=reset_3_0_3]
+	G1_in:analog -> "4462011408.4463516944.ADC2int_3":analog [label=analog_0_0_0]
+}

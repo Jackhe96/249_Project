@@ -1,0 +1,9 @@
+ply
+py
+pytest
+
+[dev]
+check-manifest
+
+[test]
+pytest
